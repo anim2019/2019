@@ -57,3 +57,62 @@ class Point {
 }
 
 ```
+
+### check if binary tree is completed
+每一次只考虑下一层，如果左孩子是空，那么flag = true，则右孩子必须为空，否则返回false；如果右孩子是空，那么flag = true，则右孩子下一层的孩子必须为空。
+
+```java
+
+/**
+ * public class TreeNode {
+ *   public int key;
+ *   public TreeNode left;
+ *   public TreeNode right;
+ *   public TreeNode(int key) {
+ *     this.key = key;
+ *   }
+ * }
+ */
+public class Solution {
+  public boolean isCompleted(TreeNode root) {
+    // Write your solution here
+    if (root == null) {
+      return true; 
+    }
+    
+    Queue<TreeNode> queue = new LinkedList<TreeNode>();
+    queue.offer(root);
+    // if the flag == true, then there should not be any node afterwards
+    boolean flag = false;
+    
+    while (!queue.isEmpty()) {
+      TreeNode node = queue.poll();
+      //check left node
+      if (node.left == null){
+        // if left node is null, then there should not be any node afterwards
+        flag = true;
+      } else if (flag) {
+        return false; 
+      } else {
+        queue.offer(node.left); 
+      }
+
+      //check right node
+      if (node.right == null) {
+        // if right node is null, then there should not be nodes as children of next level nodes
+        // since only when we check if (next level) node.left == null, it will trigger return  
+        flag = true; 
+      } else if (flag) {
+        return false; 
+      } else {
+        queue.offer(node.right); 
+      }
+    }
+    return true;
+  }
+}
+
+
+```
+
+
