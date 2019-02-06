@@ -115,4 +115,62 @@ public class Solution {
 
 ```
 
+### Bipartite
+如果一个group里面的点能够分成两组，每组内的点没有连接，那么这个组就是Bipartite.
+方法：如果这些点不能够被分成两组，那么必然会有a-b, b-c, c-a的关系。可以遍历每一个点，给它分配一个组号（比方说0），然后遍历这个点的每个邻居，给每个邻居分配一个不同的组号（比方说1），把点和组号的对应关系存在Map中。如果存在这种复杂关系的话，必然会有a0-b1, a0-c1, b1-c0，即c被分配了两个不同的组号的情况。
+如果这些点可以被分成两组，那么他们的邻居不会有交叉，则不会有这种情况。
+
+```java
+
+/**
+ * public class GraphNode {
+ *   public int key;
+ *   public List<GraphNode> neighbors;
+ *   public GraphNode(int key) {
+ *     this.key = key;
+ *     this.neighbors = new ArrayList<GraphNode>();
+ *   }
+ * }
+ */
+public class Solution {
+  public boolean isBipartite(List<GraphNode> graph) {
+    // write your solution here
+    for (GraphNode node : graph) {
+      if (!helper(node)) {
+        return false; 
+      }
+    }
+    
+    return true;
+  }
+  
+  private boolean helper(GraphNode node) {
+    Queue<GraphNode> queue = new LinkedList<GraphNode>();
+    Map<GraphNode, Integer> visitedMap = new HashMap<GraphNode, Integer>();
+    // add node in queue and assign a group number to this node
+    queue.offer(node);
+    visitedMap.put(node, 0);
+    
+    while (!queue.isEmpty()) {
+      GraphNode curNode = queue.poll();
+      // iterate over all of neighbors
+      // the neighbor node should have different group number
+      // if the group number are same, then the list cannot be separated into to group
+      int curGroup = visitedMap.get(curNode);
+      for (GraphNode neighbor : curNode.neighbors) {
+        if (!visitedMap.containsKey(neighbor)) {
+          visitedMap.put(neighbor, curGroup == 0 ? 1 : 0);
+          queue.offer(neighbor);
+        } else if (visitedMap.get(neighbor) == curGroup) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  }
+}
+
+```
+
 
