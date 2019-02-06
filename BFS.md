@@ -172,5 +172,6 @@ public class Solution {
 }
 
 ```
-
+### Kth Smallest Number In Sorted matrix
+每次如果周围matrix[x+1,y] 和 matrix[x, y+1]没有被遍历过的话把这两个点加到priorityQueue里，然后循环k-1次，poll k-1次，即可得到第k个最小值。
 
